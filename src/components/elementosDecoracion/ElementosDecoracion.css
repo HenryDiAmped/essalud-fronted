@@ -1,0 +1,37 @@
+.decorative-circle {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, #ffffff22, #0000ff77);
+  border-radius: 50%;
+}
+
+.top-left {
+  top: 100px;
+  left: 30px;
+}
+
+.top-right {
+  top: 100px;
+  right: 30px;
+}
+
+.bottom-left,
+.bottom-right {
+  width: 200px;
+  height: 50px;
+  border-radius: 50px;
+  background: linear-gradient(to right, #4ca1af, #c4e0e5);
+}
+
+.bottom-left {
+  bottom: 200px;
+  left: 20px;
+  transform: rotate(45deg);
+}
+
+.bottom-right {
+  bottom: 200px;
+  right: 20px;
+  transform: rotate(-45deg);
+}
