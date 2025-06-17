@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import './ModalAgregarUsuario.css';
 
 const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
-    const [usuario, setUsuario] = useState({
+    const usuarioInicial = {
         tipoDocumento: '',
         numDocumento: '',
         nombre: '',
         apellido: '',
-        telefono: '',
-        correo: '',
-        tipoUsuario: 'PACIENTE'
-    });
+        numeroCelular: '',
+        correoElectronico: '',
+        tipoUsuario: 'PACIENTE',
+        contrasena: ''
+    };
+
+    const [usuario, setUsuario] = useState(usuarioInicial);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,6 +24,8 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave(usuario);
+        setUsuario(usuarioInicial);
+        onClose();
     };
 
     if (!show) return null;
@@ -50,10 +56,9 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
                                             onChange={handleChange}
                                             required
                                         >
-                                            <option value="">Seleccione su documento</option>
+                                            <option value="" disabled selected hidden>Seleccione su documento</option>
                                             <option value="DNI">DNI</option>
-                                            <option value="CE">Carnet de Extranjería</option>
-                                            <option value="PASAPORTE">Pasaporte</option>
+                                            <option value="CE">CE</option>
                                         </select>
                                     </div>
                                 </div>
@@ -63,10 +68,12 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
                                         <input
                                             type="text"
                                             className="modalUsuario-input"
-                                            placeholder="Ingrese numero de documento"
+                                            placeholder="Ingrese número de documento"
                                             name="numDocumento"
                                             value={usuario.numDocumento}
                                             onChange={handleChange}
+                                            pattern="\d{8,12}"
+                                            title="Debe contener entre 8 y 12 dígitos numéricos"
                                             required
                                         />
                                     </div>
@@ -111,10 +118,12 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
                                         <input
                                             type="tel"
                                             className="modalUsuario-input"
-                                            placeholder="999 999 999"
-                                            name="telefono"
-                                            value={usuario.telefono}
+                                            placeholder="999999999"
+                                            name="numeroCelular"
+                                            value={usuario.numeroCelular}
                                             onChange={handleChange}
+                                            pattern="\d{9}"
+                                            title="Debe contener exactamente 9 dígitos numéricos"
                                             required
                                         />
                                     </div>
@@ -126,8 +135,8 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
                                             type="email"
                                             className="modalUsuario-input"
                                             placeholder="Ingrese correo del usuario"
-                                            name="correo"
-                                            value={usuario.correo}
+                                            name="correoElectronico"
+                                            value={usuario.correoElectronico}
                                             onChange={handleChange}
                                             required
                                         />
@@ -136,7 +145,7 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
                             </div>
 
                             <div className="modalUsuario-row">
-                                <div className="modalUsuario-colFull">
+                                <div className="modalUsuario-col">
                                     <div className="modalUsuario-formGroup">
                                         <label className="modalUsuario-label">Tipo de usuario</label>
                                         <select
@@ -149,6 +158,22 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
                                             <option value="PACIENTE">PACIENTE</option>
                                             <option value="ADMINISTRADOR">ADMINISTRADOR</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div className="modalUsuario-col">
+                                    <div className="modalUsuario-formGroup">
+                                        <label className="modalUsuario-label">Contraseña</label>
+                                        <input
+                                            type="password"
+                                            className="modalUsuario-input"
+                                            placeholder="Ingrese su contraseña"
+                                            name="contrasena"
+                                            value={usuario.contrasena}
+                                            onChange={handleChange}
+                                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}"
+                                            title="Mínimo 8 caracteres, al menos 1 mayúscula, 1 minúscula y 1 número"
+                                            required
+                                        />
                                     </div>
                                 </div>
                             </div>
