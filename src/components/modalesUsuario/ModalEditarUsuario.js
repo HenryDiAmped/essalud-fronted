@@ -1,20 +1,12 @@
-import React, { useState } from 'react';
-import './ModalesUsuario.css';
+import React, { useState, useEffect } from 'react'
+import './ModalesUsuario.css'
 
-const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
-    const usuarioInicial = {
-        tipoDocumento: '',
-        numDocumento: '',
-        nombre: '',
-        apellido: '',
-        numeroCelular: '',
-        correoElectronico: '',
-        tipoUsuario: 'PACIENTE',
-        contrasena: ''
-    };
+export const ModalEditarUsuario = ({ show, onClose, onUpdate, usuarioActual }) => {
+    const [usuario, setUsuario] = useState(usuarioActual);
 
-    const [usuario, setUsuario] = useState(usuarioInicial);
-
+    useEffect(() => {
+        setUsuario(usuarioActual);
+    }, [usuarioActual]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,8 +15,7 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave(usuario);
-        setUsuario(usuarioInicial);
+        onUpdate(usuario.idUsuario, usuario);
     };
 
     if (!show) return null;
@@ -34,7 +25,7 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
             <div className="modalUsuario-dialog">
                 <div className="modalUsuario-content">
                     <div className="modalUsuario-header">
-                        <h5 className="modalUsuario-title">Registro</h5>
+                        <h5 className="modalUsuario-title">Editar Usuario</h5>
                         <button
                             type="button"
                             className="modalUsuario-closeBtn"
@@ -197,7 +188,7 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ModalAgregarUsuario;
+export default ModalEditarUsuario;

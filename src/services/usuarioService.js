@@ -20,6 +20,24 @@ class UsuarioService {
             }
         });
     }
+
+    getUsuarioById(usuarioId) {
+        return axios.get(USUARIO_BASE_REST_API_URL + '/' + usuarioId, {
+            auth: {
+                username: "admin",
+                password: "admin123"
+            }
+        });
+    }
+
+    updateUsuario(usuarioId, usuario) {
+        return axios.put(USUARIO_BASE_REST_API_URL + '/' + usuarioId, usuario, {
+            auth: {
+                username: "admin",
+                password: "admin123"
+            }
+        })
+    }
 }
 
 export default new UsuarioService();

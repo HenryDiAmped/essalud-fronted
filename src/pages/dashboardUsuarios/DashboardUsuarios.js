@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import usuarioService from '../../services/usuarioService';
 import ModalAgregarUsuario from '../../components/modalesUsuario/ModalAgregarUsuario'
+import ModalEditarUsuario from '../../components/modalesUsuario/ModalEditarUsuario';
 
 export const DashboardUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [showModalAgregarUsuario, setShowModalAgregarUsuario] = useState(false);
+    const [showModalEditarUsuario, setShowModalEditarUsuario] = useState(false);
+    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
 
     //Listar los usuarios
     useEffect(() => {
@@ -27,6 +30,24 @@ export const DashboardUsuarios = () => {
         }).catch(error => {
             console.log(error);
         })
+    };
+
+    // Abrir modal y cargar usuario
+    const handleEditarClick = (usuario) => {
+        setUsuarioSeleccionado(usuario);
+        setShowModalEditarUsuario(true);
+    };
+
+    // Guardar cambios editados
+    const handleUpdateUsuario = (id, datosActualizados) => {
+        usuarioService.updateUsuario(id, datosActualizados).then(() => {
+            usuarioService.getAllUsuarios().then(res => {
+                setUsuarios(res.data);
+                setShowModalEditarUsuario(false);
+            });
+        }).catch(error => {
+            console.error("Error al actualizar:", error);
+        });
     };
 
     return (
@@ -70,7 +91,7 @@ export const DashboardUsuarios = () => {
                                 <td>{usuario.numDocumento}</td>
                                 <td>
                                     <div className="d-flex flex-column flex-md-row gap-2">
-                                        <button className="btn btn-warning btn-sm">Editar</button>
+                                        <button className="btn btn-warning btn-sm" onClick={() => handleEditarClick(usuario)}>Editar</button>
                                         <button className="btn btn-danger btn-sm">Eliminar</button>
                                     </div>
                                 </td>
@@ -86,6 +107,15 @@ export const DashboardUsuarios = () => {
                 onClose={() => setShowModalAgregarUsuario(false)}
                 onSave={handleSaveUsuario}
             />
+
+            {showModalEditarUsuario && usuarioSeleccionado && (
+                <ModalEditarUsuario
+                    show={showModalEditarUsuario}
+                    onClose={() => setShowModalEditarUsuario(false)}
+                    onUpdate={handleUpdateUsuario}
+                    usuarioActual={usuarioSeleccionado}
+                />
+            )}
 
         </div>
     );
