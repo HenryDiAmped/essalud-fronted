@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import usuarioService from '../../services/usuarioService';
-import ModalAgregarUsuario from '../../components/modalAgregarUsuario/ModalAgregarUsuario'
+import ModalAgregarUsuario from '../../components/modalesUsuario/ModalAgregarUsuario'
 
 export const DashboardUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showModalAgregarUsuario, setShowModalAgregarUsuario] = useState(false);
 
+    //Listar los usuarios
     useEffect(() => {
-        usuarioService.getAllClientes().then(response => {
+        usuarioService.getAllUsuarios().then(response => {
             setUsuarios(response.data);
             console.log(response.data);
         }).catch(error => {
@@ -17,10 +18,15 @@ export const DashboardUsuarios = () => {
 
     // Guardar nuevo usuario
     const handleSaveUsuario = (nuevoUsuario) => {
-        // Aquí iría la lógica para guardar el usuario
-        console.log('Nuevo usuario:', nuevoUsuario);
-        // Ejemplo:
-        // usuarioService.createUsuario(nuevoUsuario).then(...)
+        usuarioService.createUsuarios(nuevoUsuario).then((response) => {
+            console.log(response.data);
+            usuarioService.getAllUsuarios().then(res => {
+                setUsuarios(res.data);
+            });
+            setShowModalAgregarUsuario(false);
+        }).catch(error => {
+            console.log(error);
+        })
     };
 
     return (
@@ -30,7 +36,7 @@ export const DashboardUsuarios = () => {
             {/* Encabezado y botón */}
             <div className="d-flex justify-content-between align-items-center my-3">
                 <h2 className="text-center m-0">Lista de usuarios</h2>
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                <button className="btn btn-primary" onClick={() => setShowModalAgregarUsuario(true)}>
                     + Agregar Usuario
                 </button>
             </div>
@@ -76,8 +82,8 @@ export const DashboardUsuarios = () => {
 
             {/* Modal */}
             <ModalAgregarUsuario
-                show={showModal}
-                onClose={() => setShowModal(false)}
+                show={showModalAgregarUsuario}
+                onClose={() => setShowModalAgregarUsuario(false)}
                 onSave={handleSaveUsuario}
             />
 

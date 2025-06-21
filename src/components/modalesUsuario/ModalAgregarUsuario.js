@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './ModalAgregarUsuario.css';
+import './ModalesUsuario.css';
 
 const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
     const usuarioInicial = {
@@ -25,7 +25,6 @@ const ModalRegistroUsuario = ({ show, onClose, onSave }) => {
         e.preventDefault();
         onSave(usuario);
         setUsuario(usuarioInicial);
-        onClose();
     };
 
     if (!show) return null;
