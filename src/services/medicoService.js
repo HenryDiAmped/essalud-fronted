@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const USUARIO_BASE_REST_API_URL = "http://localhost:8080/api/v1/usuarios";
+const MEDICO_BASE_REST_API_URL = "http://localhost:8080/api/v1/medicos";
 
-class UsuarioService {
-    getAllUsuarios() {
-        return axios.get(USUARIO_BASE_REST_API_URL, {
+class MedicoService {
+    getAllMedicos() {
+        return axios.get(MEDICO_BASE_REST_API_URL, {
             auth: {
                 username: "admin",
                 password: "admin123"
@@ -12,8 +12,8 @@ class UsuarioService {
         });
     }
 
-    createUsuarios(usuario) {
-        return axios.post(USUARIO_BASE_REST_API_URL, usuario, {
+    createMedicos(medico) {
+        return axios.post(MEDICO_BASE_REST_API_URL, medico, {
             auth: {
                 username: "admin",
                 password: "admin123"
@@ -21,8 +21,8 @@ class UsuarioService {
         });
     }
 
-    getUsuarioById(usuarioId) {
-        return axios.get(USUARIO_BASE_REST_API_URL + '/' + usuarioId, {
+    getMedicoById(medicoId) {
+        return axios.get(MEDICO_BASE_REST_API_URL + '/' + medicoId, {
             auth: {
                 username: "admin",
                 password: "admin123"
@@ -30,8 +30,8 @@ class UsuarioService {
         });
     }
 
-    updateUsuario(usuarioId, usuario) {
-        return axios.put(USUARIO_BASE_REST_API_URL + '/' + usuarioId, usuario, {
+    updateMedico(medicoId, medico) {
+        return axios.put(MEDICO_BASE_REST_API_URL + '/' + medicoId, medico, {
             auth: {
                 username: "admin",
                 password: "admin123"
@@ -39,8 +39,8 @@ class UsuarioService {
         })
     }
 
-    deleteUsuario(usuarioId) {
-        return axios.delete(USUARIO_BASE_REST_API_URL + '/' + usuarioId, {
+    deleteMedico(medicoId) {
+        return axios.delete(MEDICO_BASE_REST_API_URL + '/' + medicoId, {
             auth: {
                 username: "admin",
                 password: "admin123"
@@ -49,4 +49,4 @@ class UsuarioService {
     }
 }
 
-export default new UsuarioService();
+export default new MedicoService();

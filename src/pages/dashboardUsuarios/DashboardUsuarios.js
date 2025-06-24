@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import usuarioService from '../../services/usuarioService';
 import ModalAgregarUsuario from '../../components/modalesUsuario/ModalAgregarUsuario'
 import ModalEditarUsuario from '../../components/modalesUsuario/ModalEditarUsuario';
+import ModalConfirmacion from '../../components/modalConfirmacion/ModalConfirmacion';
 
 export const DashboardUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [showModalAgregarUsuario, setShowModalAgregarUsuario] = useState(false);
     const [showModalEditarUsuario, setShowModalEditarUsuario] = useState(false);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+    //
+    const [showModalConfirmacion, setShowModalConfirmacion] = useState(false);
+    const [resolverConfirmacion, setResolverConfirmacion] = useState(null);
 
     const listarUsuarios = () => {
         usuarioService.getAllUsuarios().then(response => {
@@ -17,6 +21,20 @@ export const DashboardUsuarios = () => {
             console.log(error);
         });
     }
+    
+    const mostrarConfirmacion = (mensaje) => {
+        return new Promise((resolve) => {
+            setResolverConfirmacion(() => resolve);
+            setShowModalConfirmacion(true);
+        });
+    };
+
+    const manejarConfirmacion = (respuesta) => {
+        setShowModalConfirmacion(false);
+        if (resolverConfirmacion) resolverConfirmacion(respuesta);
+    };
+
+
 
     //Listar los usuarios
     useEffect(() => {
@@ -51,8 +69,11 @@ export const DashboardUsuarios = () => {
     };
 
     // Eliminar usuario
-    const deleteUsuario = (usuarioId) => {
-        usuarioService.deleteUsuario(usuarioId).then((response) => {
+    const deleteUsuario = async (usuarioId) => {
+        const confirmar = await mostrarConfirmacion("¿Está seguro que desea eliminar este usuario? Esta operación no se puede deshacer.");
+        if (!confirmar) return;
+
+        usuarioService.deleteUsuario(usuarioId).then(() => {
             listarUsuarios();
         }).catch(error => {
             console.log(error);
@@ -125,6 +146,15 @@ export const DashboardUsuarios = () => {
                     usuarioActual={usuarioSeleccionado}
                 />
             )}
+
+            {showModalConfirmacion && (
+                <ModalConfirmacion
+                    mensaje="¿Está seguro que desea eliminar este usuario?"
+                    onConfirm={() => manejarConfirmacion(true)}
+                    onCancel={() => manejarConfirmacion(false)}
+                />
+            )}
+
 
         </div>
     );
