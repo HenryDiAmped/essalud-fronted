@@ -38,6 +38,15 @@ class UsuarioService {
             }
         })
     }
+
+    deleteUsuario(usuarioId) {
+        return axios.delete(USUARIO_BASE_REST_API_URL + '/' + usuarioId, {
+            auth: {
+                username: "admin",
+                password: "admin123"
+            }
+        })
+    }
 }
 
 export default new UsuarioService();

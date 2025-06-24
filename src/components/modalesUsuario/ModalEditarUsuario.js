@@ -46,7 +46,7 @@ export const ModalEditarUsuario = ({ show, onClose, onUpdate, usuarioActual }) =
                                             onChange={handleChange}
                                             required
                                         >
-                                            <option value="" disabled selected hidden>Seleccione su documento</option>
+                                            <option value="" disabled hidden>Seleccione su documento</option>
                                             <option value="DNI">DNI</option>
                                             <option value="CE">CE</option>
                                         </select>
@@ -139,11 +139,12 @@ export const ModalEditarUsuario = ({ show, onClose, onUpdate, usuarioActual }) =
                                     <div className="modalUsuario-formGroup">
                                         <label className="modalUsuario-label">Tipo de usuario</label>
                                         <select
-                                            className="modalUsuario-select"
+                                            className="modalUsuario-select opacity-75 text-muted"
                                             name="tipoUsuario"
                                             value={usuario.tipoUsuario}
                                             onChange={handleChange}
                                             required
+                                            disabled
                                         >
                                             <option value="PACIENTE">PACIENTE</option>
                                             <option value="ADMINISTRADOR">ADMINISTRADOR</option>

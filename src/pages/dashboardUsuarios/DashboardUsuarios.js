@@ -9,30 +9,32 @@ export const DashboardUsuarios = () => {
     const [showModalEditarUsuario, setShowModalEditarUsuario] = useState(false);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
 
-    //Listar los usuarios
-    useEffect(() => {
+    const listarUsuarios = () => {
         usuarioService.getAllUsuarios().then(response => {
             setUsuarios(response.data);
             console.log(response.data);
         }).catch(error => {
             console.log(error);
         });
+    }
+
+    //Listar los usuarios
+    useEffect(() => {
+        listarUsuarios();
     }, []);
 
     // Guardar nuevo usuario
     const handleSaveUsuario = (nuevoUsuario) => {
         usuarioService.createUsuarios(nuevoUsuario).then((response) => {
             console.log(response.data);
-            usuarioService.getAllUsuarios().then(res => {
-                setUsuarios(res.data);
-            });
+            listarUsuarios();
             setShowModalAgregarUsuario(false);
         }).catch(error => {
             console.log(error);
         })
     };
 
-    // Abrir modal y cargar usuario
+    // Abrir modal y cargar usuario a editar
     const handleEditarClick = (usuario) => {
         setUsuarioSeleccionado(usuario);
         setShowModalEditarUsuario(true);
@@ -41,14 +43,21 @@ export const DashboardUsuarios = () => {
     // Guardar cambios editados
     const handleUpdateUsuario = (id, datosActualizados) => {
         usuarioService.updateUsuario(id, datosActualizados).then(() => {
-            usuarioService.getAllUsuarios().then(res => {
-                setUsuarios(res.data);
-                setShowModalEditarUsuario(false);
-            });
+            listarUsuarios();
+            setShowModalEditarUsuario(false);
         }).catch(error => {
             console.error("Error al actualizar:", error);
         });
     };
+
+    // Eliminar usuario
+    const deleteUsuario = (usuarioId) => {
+        usuarioService.deleteUsuario(usuarioId).then((response) => {
+            listarUsuarios();
+        }).catch(error => {
+            console.log(error);
+        })
+    }
 
     return (
         <div className="container">
@@ -92,7 +101,7 @@ export const DashboardUsuarios = () => {
                                 <td>
                                     <div className="d-flex flex-column flex-md-row gap-2">
                                         <button className="btn btn-warning btn-sm" onClick={() => handleEditarClick(usuario)}>Editar</button>
-                                        <button className="btn btn-danger btn-sm">Eliminar</button>
+                                        <button className="btn btn-danger btn-sm" onClick={() => deleteUsuario(usuario.idUsuario)}>Eliminar</button>
                                     </div>
                                 </td>
                             </tr>

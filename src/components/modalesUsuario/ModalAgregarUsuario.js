@@ -55,7 +55,7 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                             onChange={handleChange}
                                             required
                                         >
-                                            <option value="" disabled selected hidden>Seleccione su documento</option>
+                                            <option value="" disabled hidden>Seleccione su documento</option>
                                             <option value="DNI">DNI</option>
                                             <option value="CE">CE</option>
                                         </select>
