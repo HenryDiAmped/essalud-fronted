@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './ModalesUsuario.css';
 
 const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
     const usuarioInicial = {
@@ -30,26 +29,26 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
     if (!show) return null;
 
     return (
-        <div className="modalUsuario-overlay">
-            <div className="modalUsuario-dialog">
-                <div className="modalUsuario-content">
-                    <div className="modalUsuario-header">
-                        <h5 className="modalUsuario-title">Registro</h5>
+        <div className="modal-overlay">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Registro</h5>
                         <button
                             type="button"
-                            className="modalUsuario-closeBtn"
+                            className="modal-closeBtn"
                             onClick={onClose}
                         ></button>
                     </div>
 
-                    <div className="modalUsuario-body">
+                    <div className="modal-body">
                         <form onSubmit={handleSubmit}>
-                            <div className="modalUsuario-row">
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Tipo de documento</label>
+                            <div className="modal-row">
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Tipo de documento</label>
                                         <select
-                                            className="modalUsuario-select"
+                                            className="modal-select"
                                             name="tipoDocumento"
                                             value={usuario.tipoDocumento}
                                             onChange={handleChange}
@@ -61,12 +60,12 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Número de documento</label>
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Número de documento</label>
                                         <input
                                             type="text"
-                                            className="modalUsuario-input"
+                                            className="modal-input"
                                             placeholder="Ingrese número de documento"
                                             name="numDocumento"
                                             value={usuario.numDocumento}
@@ -79,13 +78,13 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                 </div>
                             </div>
 
-                            <div className="modalUsuario-row">
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Nombre</label>
+                            <div className="modal-row">
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Nombre</label>
                                         <input
                                             type="text"
-                                            className="modalUsuario-input"
+                                            className="modal-input"
                                             placeholder="Ingrese nombre del usuario"
                                             name="nombre"
                                             value={usuario.nombre}
@@ -94,12 +93,12 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Apellido</label>
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Apellido</label>
                                         <input
                                             type="text"
-                                            className="modalUsuario-input"
+                                            className="modal-input"
                                             placeholder="Ingrese apellido del usuario"
                                             name="apellido"
                                             value={usuario.apellido}
@@ -110,13 +109,13 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                 </div>
                             </div>
 
-                            <div className="modalUsuario-row">
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Teléfono</label>
+                            <div className="modal-row">
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Teléfono</label>
                                         <input
                                             type="tel"
-                                            className="modalUsuario-input"
+                                            className="modal-input"
                                             placeholder="999999999"
                                             name="numeroCelular"
                                             value={usuario.numeroCelular}
@@ -127,12 +126,12 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Correo</label>
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Correo</label>
                                         <input
                                             type="email"
-                                            className="modalUsuario-input"
+                                            className="modal-input"
                                             placeholder="Ingrese correo del usuario"
                                             name="correoElectronico"
                                             value={usuario.correoElectronico}
@@ -143,12 +142,12 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                 </div>
                             </div>
 
-                            <div className="modalUsuario-row">
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Tipo de usuario</label>
+                            <div className="modal-row">
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Tipo de usuario</label>
                                         <select
-                                            className="modalUsuario-select"
+                                            className="modal-select"
                                             name="tipoUsuario"
                                             value={usuario.tipoUsuario}
                                             onChange={handleChange}
@@ -159,12 +158,12 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="modalUsuario-col">
-                                    <div className="modalUsuario-formGroup">
-                                        <label className="modalUsuario-label">Contraseña</label>
+                                <div className="modal-col">
+                                    <div className="modal-formGroup">
+                                        <label className="modal-label">Contraseña</label>
                                         <input
                                             type="password"
-                                            className="modalUsuario-input"
+                                            className="modal-input"
                                             placeholder="Ingrese su contraseña"
                                             name="contrasena"
                                             value={usuario.contrasena}
@@ -177,17 +176,17 @@ const ModalAgregarUsuario = ({ show, onClose, onSave }) => {
                                 </div>
                             </div>
 
-                            <div className="modalUsuario-footer">
+                            <div className="modal-footer">
                                 <button
                                     type="button"
-                                    className="modalUsuario-btn modalUsuario-btnSecondary"
+                                    className="modal-btn modal-btnSecondary"
                                     onClick={onClose}
                                 >
                                     CANCELAR
                                 </button>
                                 <button
                                     type="submit"
-                                    className="modalUsuario-btn modalUsuario-btnPrimary"
+                                    className="modal-btn modal-btnPrimary"
                                 >
                                     GUARDAR CAMBIOS
                                 </button>

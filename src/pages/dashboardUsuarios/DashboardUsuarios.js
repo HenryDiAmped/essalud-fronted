@@ -21,7 +21,7 @@ export const DashboardUsuarios = () => {
             console.log(error);
         });
     }
-    
+
     const mostrarConfirmacion = (mensaje) => {
         return new Promise((resolve) => {
             setResolverConfirmacion(() => resolve);
@@ -33,8 +33,6 @@ export const DashboardUsuarios = () => {
         setShowModalConfirmacion(false);
         if (resolverConfirmacion) resolverConfirmacion(respuesta);
     };
-
-
 
     //Listar los usuarios
     useEffect(() => {
