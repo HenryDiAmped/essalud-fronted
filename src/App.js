@@ -16,6 +16,7 @@ import { DashboardEspecialidades } from "./pages/dashboardEspecialidades/Dashboa
 import { DashboardSedes } from "./pages/dashboardSedes/DashboardSedes";
 import { DashboardJornada } from "./pages/dashboardJornada/DashboardJornada";
 import { DashboardTurnosAtencion } from "./pages/dashboardTurnosAtencion/DashboardTurnosAtencion";
+import { DetallarCita } from "./pages/detallarCita/DetallarCita";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/" element={<Home />}>
           <Route path="/" element={<HomeCitas />} />
           <Route path="reservaCitas" element={<HomeCitas />} />
+          <Route path='reservaCitas/detallaCita/:idSede' element={<DetallarCita />} />
           <Route path="historialCitas" element={<HomeHistorial />} />
         </Route>
         <Route path="/dashboard" element={<Dashboard />}>
