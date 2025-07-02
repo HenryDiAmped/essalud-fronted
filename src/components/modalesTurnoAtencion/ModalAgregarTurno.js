@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import medicoService from '../../services/medicoService';
 import detalleSedeService from '../../services/detalleSedeService';
+import jornadaMedicoService from '../../services/jornadaMedicoService';
 
 const ModalAgregarTurno = ({ show, onClose, onSave }) => {
     const turnoInicial = {
         medico: { idMedico: '' },
         detalleSede: { idDetalleSede: '' },
-        fecha: '',
+        fecha: null,
         horaInicio: '',
         horaFin: '',
         numCupos: ''
@@ -17,12 +20,18 @@ const ModalAgregarTurno = ({ show, onClose, onSave }) => {
     const [detallesSede, setDetallesSede] = useState([]);
     const [especialidadSeleccionada, setEspecialidadSeleccionada] = useState('');
 
+    const [jornadasMedico, setJornadasMedico] = useState([]);
+    const [diasPermitidos, setDiasPermitidos] = useState([]);
+
     useEffect(() => {
         medicoService.getAllMedicos()
             .then(response => setMedicos(response.data))
             .catch(error => console.log(error))
         detalleSedeService.getAllDetalleSedes()
             .then(response => setDetallesSede(response.data))
+            .catch(error => console.log(error));
+        jornadaMedicoService.getAllJornadaMedicos()
+            .then(response => setJornadasMedico(response.data))
             .catch(error => console.log(error));
     }, []);
 
@@ -32,15 +41,41 @@ const ModalAgregarTurno = ({ show, onClose, onSave }) => {
         if (name === 'medico') {
             setTurno(prev => ({
                 ...prev,
-                medico: { idMedico: value }
+                medico: { idMedico: value },
+                fecha: null
             }));
-        } else if (name === 'idDetalleSede') {
+
+            if (value) {
+                const jornadasFiltradas = jornadasMedico.filter(j => j.medico.idMedico === parseInt(value));
+                const dias = jornadasFiltradas.map(j => j.diaSemana);
+
+                const diasNumeros = dias.map(d => {
+                    switch (d) {
+                        case 'LUNES': return 1;
+                        case 'MARTES': return 2;
+                        case 'MIERCOLES': return 3;
+                        case 'JUEVES': return 4;
+                        case 'VIERNES': return 5;
+                        case 'SABADO': return 6;
+                        case 'DOMINGO': return 0;
+                        default: return -1;
+                    }
+                });
+                setDiasPermitidos(diasNumeros);
+            } else {
+                setDiasPermitidos([]);
+            }
+        }
+        else if (name === 'idDetalleSede') {
             const detalleSeleccionado = detallesSede.find(d => d.idDetalleSede === parseInt(value));
             setEspecialidadSeleccionada(detalleSeleccionado?.especialidad?.idEspecialidad || '');
             setTurno(prev => ({
                 ...prev,
-                detalleSede: { idDetalleSede: value }
+                detalleSede: { idDetalleSede: value },
+                medico: { idMedico: '' }, // ✅ limpiar médico
+                fecha: null                // ✅ opcional limpiar fecha
             }));
+            setDiasPermitidos([]); // opcional
         } else {
             setTurno(prev => ({ ...prev, [name]: value }));
         }
@@ -48,7 +83,23 @@ const ModalAgregarTurno = ({ show, onClose, onSave }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave(turno);
+
+        // ✅ Validar cupos vs duración
+        const [hInicio, mInicio] = turno.horaInicio.split(':').map(Number);
+        const [hFin, mFin] = turno.horaFin.split(':').map(Number);
+        const duracionHoras = (hFin + mFin / 60) - (hInicio + mInicio / 60);
+
+        if (duracionHoras < turno.numCupos) {
+            alert(`No puede asignar ${turno.numCupos} cupos en un rango de ${duracionHoras.toFixed(1)} horas. Cada cita ocupa 1 hora.`);
+            return;
+        }
+
+        const turnoParaEnviar = {
+            ...turno,
+            fecha: turno.fecha ? turno.fecha.toISOString().split('T')[0] : ''
+        };
+
+        onSave(turnoParaEnviar);
         setTurno(turnoInicial);
         setEspecialidadSeleccionada('');
     };
@@ -115,12 +166,14 @@ const ModalAgregarTurno = ({ show, onClose, onSave }) => {
                                 <div className="modal-col">
                                     <div className="modal-formGroup">
                                         <label className="modal-label">Fecha</label>
-                                        <input
-                                            type="date"
+                                        <DatePicker
+                                            selected={turno.fecha}
+                                            onChange={(date) => setTurno(prev => ({ ...prev, fecha: date }))}
                                             className="modal-input"
-                                            name="fecha"
-                                            value={turno.fecha}
-                                            onChange={handleChange}
+                                            dateFormat="dd/MM/yyyy"
+                                            placeholderText="Seleccione fecha"
+                                            minDate={new Date()}
+                                            filterDate={(date) => diasPermitidos.includes(date.getDay())}
                                             required
                                         />
                                     </div>

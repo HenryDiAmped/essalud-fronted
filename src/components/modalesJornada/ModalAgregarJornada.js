@@ -6,8 +6,6 @@ const ModalAgregarJornada = ({ show, onClose, onSave }) => {
         medico: {
             idMedico: ''
         },
-        horaInicio: '',
-        horaFin: '',
         diaSemana: ''
     };
 
@@ -94,36 +92,6 @@ const ModalAgregarJornada = ({ show, onClose, onSave }) => {
                                     <option value="SABADO">Sábado</option>
                                     <option value="DOMINGO">Domingo</option>
                                 </select>
-                            </div>
-
-                            {/* Horarios */}
-                            <div className="modal-row">
-                                <div className="modal-col">
-                                    <div className="modal-formGroup">
-                                        <label className="modal-label">Hora de inicio</label>
-                                        <input
-                                            type="time"
-                                            className="modal-input"
-                                            name="horaInicio"
-                                            value={jornada.horaInicio}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="modal-col">
-                                    <div className="modal-formGroup">
-                                        <label className="modal-label">Hora de fin</label>
-                                        <input
-                                            type="time"
-                                            className="modal-input"
-                                            name="horaFin"
-                                            value={jornada.horaFin}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="modal-footer">

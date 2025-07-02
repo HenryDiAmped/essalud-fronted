@@ -85,8 +85,6 @@ export const DashboardJornada = () => {
                             <th>ID</th>
                             <th>Médico</th>
                             <th>Día</th>
-                            <th>Inicio</th>
-                            <th>Fin</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -96,8 +94,6 @@ export const DashboardJornada = () => {
                                 <td>{j.idJornadaMedicos}</td>
                                 <td>{j.medico.nombreMedico}</td>
                                 <td>{j.diaSemana}</td>
-                                <td>{j.horaInicio}</td>
-                                <td>{j.horaFin}</td>
                                 <td>
                                     <div className="d-flex flex-column flex-md-row gap-2">
                                         <button className="btn btn-warning btn-sm" onClick={() => handleEditarClick(j)}>Editar</button>
