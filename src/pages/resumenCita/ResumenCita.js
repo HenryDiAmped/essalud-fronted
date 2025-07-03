@@ -22,7 +22,7 @@ export const ResumenCita = () => {
             horaCita: state.horario,
             estado: "POR_ATENDER"
         };
-
+        console.log(nuevaCita);
         CitaService.createCitas(nuevaCita)
             .then(() => {
                 // luego reducimos los cupos del turno
