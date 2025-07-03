@@ -51,7 +51,6 @@ export const TablaTurnos = ({ idSede, idEspecialidad }) => {
         });
     };
 
-
     const handleSiguiente = () => {
         navigate('/reservaCitas/resumen-cita', { state: seleccion });
     };
@@ -104,6 +103,7 @@ export const TablaTurnos = ({ idSede, idEspecialidad }) => {
                                                         : 'btn-outline-success'
                                                         }`}
                                                     onClick={() => handleSeleccionHorario(turno, hora)}
+                                                    disabled={i !== opciones.length - 1} // SOLO PERMITE EL ÚLTIMO
                                                 >
                                                     {hora}
                                                 </button>
