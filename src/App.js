@@ -18,26 +18,27 @@ import { DashboardJornada } from "./pages/dashboardJornada/DashboardJornada";
 import { DashboardTurnosAtencion } from "./pages/dashboardTurnosAtencion/DashboardTurnosAtencion";
 import { DetallarCita } from "./pages/detallarCita/DetallarCita";
 import { ResumenCita } from "./pages/resumenCita/ResumenCita";
+import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home />}>
-          <Route path="/" element={<HomeCitas />} />
-          <Route path="reservaCitas" element={<HomeCitas />} />
-          <Route path='reservaCitas/detallaCita/:idSede' element={<DetallarCita />} />
-          <Route path="reservaCitas/resumen-cita" element={<ResumenCita />} />
-          <Route path="historialCitas" element={<HomeHistorial />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>}>
+          <Route path="/" element={<ProtectedRoute><HomeCitas /></ProtectedRoute>} />
+          <Route path="reservaCitas" element={<ProtectedRoute><HomeCitas /></ProtectedRoute>} />
+          <Route path='reservaCitas/detallaCita/:idSede' element={<ProtectedRoute><DetallarCita /></ProtectedRoute>} />
+          <Route path="reservaCitas/resumen-cita" element={<ProtectedRoute><ResumenCita /></ProtectedRoute>} />
+          <Route path="historialCitas" element={<ProtectedRoute><HomeHistorial /></ProtectedRoute>} />
         </Route>
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="/dashboard" element={<DashboardUsuarios />} />
-          <Route path="moduloUsuarios" element={<DashboardUsuarios />} />
-          <Route path="moduloMedicos" element={<DashboardMedicos />} />
-          <Route path="moduloEspecialidades" element={<DashboardEspecialidades />} />
-          <Route path="moduloSedes" element={<DashboardSedes />} />
-          <Route path="moduloJornadas" element={<DashboardJornada />} />
-          <Route path="moduloTurnos" element={<DashboardTurnosAtencion />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardUsuarios /></ProtectedRoute>} />
+          <Route path="moduloUsuarios" element={<ProtectedRoute><DashboardUsuarios /></ProtectedRoute>} />
+          <Route path="moduloMedicos" element={<ProtectedRoute><DashboardMedicos /></ProtectedRoute>} />
+          <Route path="moduloEspecialidades" element={<ProtectedRoute><DashboardEspecialidades /></ProtectedRoute>} />
+          <Route path="moduloSedes" element={<ProtectedRoute><DashboardSedes /></ProtectedRoute>} />
+          <Route path="moduloJornadas" element={<ProtectedRoute><DashboardJornada /></ProtectedRoute>} />
+          <Route path="moduloTurnos" element={<ProtectedRoute><DashboardTurnosAtencion /></ProtectedRoute>} />
         </Route>
         <Route path="/autenticacion" element={<Autenticacion />} />
         <Route path="/escogerpa" element={<EscogerPA />} />
