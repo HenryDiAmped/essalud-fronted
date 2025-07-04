@@ -41,14 +41,31 @@ export const DashboardUsuarios = () => {
 
     // Guardar nuevo usuario
     const handleSaveUsuario = (nuevoUsuario) => {
-        usuarioService.createUsuarios(nuevoUsuario).then((response) => {
-            console.log(response.data);
-            listarUsuarios();
-            setShowModalAgregarUsuario(false);
-        }).catch(error => {
-            console.log(error);
-        })
+        const celularExistente = usuarios.some(u => u.numeroCelular === nuevoUsuario.numeroCelular);
+        const documentoExistente = usuarios.some(u => u.numDocumento === nuevoUsuario.numDocumento);
+
+        if (celularExistente) {
+            alert("El número de celular ya está registrado.");
+            return;
+        }
+
+        if (documentoExistente) {
+            alert("El número de documento ya está registrado.");
+            return;
+        }
+
+        usuarioService.createUsuarios(nuevoUsuario)
+            .then((response) => {
+                console.log(response.data);
+                listarUsuarios();
+                setShowModalAgregarUsuario(false);
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Ocurrió un error al guardar el usuario.");
+            });
     };
+
 
     // Abrir modal y cargar usuario a editar
     const handleEditarClick = (usuario) => {
