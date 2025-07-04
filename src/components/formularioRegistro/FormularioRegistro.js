@@ -1,16 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import UsuarioService from "../../services/usuarioService"; // o tu ruta correcta
 
-const FormularioRegistro = ({ onRegistroExitoso }) => {
+const FormularioRegistro = () => {
+  const navigate = useNavigate();
+
   const [formulario, setFormulario] = useState({
     nombre: "",
     apellido: "",
-    tipoDoc: "",
-    documento: "",
-    email: "",
-    telefono: "",
-    clave: "",
+    tipoDocumento: "",
+    numDocumento: "",
+    correoElectronico: "",
+    numeroCelular: "",
+    contrasena: "",
     terminos: false,
   });
+
   const [errores, setErrores] = useState({});
   const [mostrarErrores, setMostrarErrores] = useState(false);
 
@@ -18,13 +23,11 @@ const FormularioRegistro = ({ onRegistroExitoso }) => {
     const { name, value, type, checked } = e.target;
     const valorActual = type === "checkbox" ? checked : value;
 
-    // Actualiza el formulario
     setFormulario({
       ...formulario,
       [name]: valorActual,
     });
 
-    // Validación en tiempo real (si ya se mostraron errores antes)
     if (mostrarErrores) {
       const error = validarCampo(name, valorActual);
       setErrores({
@@ -39,19 +42,19 @@ const FormularioRegistro = ({ onRegistroExitoso }) => {
       case "nombre":
       case "apellido":
         return !valor ? "Este campo es obligatorio" : "";
-      case "tipoDoc":
+      case "tipoDocumento":
         return !valor ? "Selecciona un tipo de documento" : "";
-      case "documento":
+      case "numDocumento":
         return !/^\d{8,12}$/.test(valor)
           ? "Documento inválido (8-12 dígitos)"
           : "";
-      case "email":
+      case "correoElectronico":
         return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)
           ? "Correo inválido"
           : "";
-      case "telefono":
+      case "numeroCelular":
         return !/^\d{9}$/.test(valor) ? "Teléfono debe tener 9 dígitos" : "";
-      case "clave":
+      case "contrasena":
         return !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(valor)
           ? "Mínimo 8 caracteres, 1 mayúscula, 1 minúscula y 1 número"
           : "";
@@ -64,192 +67,153 @@ const FormularioRegistro = ({ onRegistroExitoso }) => {
 
   const validarFormulario = () => {
     const nuevosErrores = {};
-
-    // Primero validamos todos los campos
     Object.keys(formulario).forEach((key) => {
       nuevosErrores[key] = validarCampo(key, formulario[key]);
     });
-
-    // Luego actualizamos el estado
     setErrores(nuevosErrores);
     setMostrarErrores(true);
-
-    // Verificamos si hay algún error
     return !Object.values(nuevosErrores).some((error) => error);
   };
 
   const manejarEnvio = (e) => {
     e.preventDefault();
-
     if (validarFormulario()) {
-      // Aquí iría la lógica para enviar los datos al servidor
-      console.log("Formulario válido:", formulario);
-      onRegistroExitoso();
+      const usuarioParaGuardar = {
+        nombre: formulario.nombre,
+        apellido: formulario.apellido,
+        tipoDocumento: formulario.tipoDocumento,
+        numDocumento: formulario.numDocumento,
+        correoElectronico: formulario.correoElectronico,
+        numeroCelular: formulario.numeroCelular,
+        contrasena: formulario.contrasena,
+        tipoUsuario: "PACIENTE"
+      };
+      console.log("Enviando:", usuarioParaGuardar);
+
+      UsuarioService.createUsuarios(usuarioParaGuardar)
+        .then(() => {
+          alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
+          navigate("/ingresar");
+        })
+        .catch((err) => {
+          console.error("Error al registrar usuario:", err);
+          alert("Ocurrió un error al registrarte. Intenta nuevamente.");
+        });
     }
   };
 
   return (
-    <form id="registerForm" onSubmit={manejarEnvio} noValidate>
+    <form onSubmit={manejarEnvio} noValidate>
       <div className="mb-3">
-        <label htmlFor="nombre" className="form-label">
-          Nombre
-        </label>
+        <label htmlFor="nombre" className="form-label">Nombre</label>
         <input
           type="text"
           id="nombre"
           name="nombre"
-          className={`form-control-registro ${
-            errores.nombre && mostrarErrores ? "is-invalid" : ""
-          }`}
+          className={`form-control-registro ${errores.nombre && mostrarErrores ? "is-invalid" : ""}`}
           value={formulario.nombre}
           onChange={manejarCambio}
           required
         />
-        {errores.nombre && mostrarErrores && (
-          <div className="invalid-feedback">{errores.nombre}</div>
-        )}
+        {errores.nombre && mostrarErrores && <div className="invalid-feedback">{errores.nombre}</div>}
       </div>
 
       <div className="mb-3">
-        <label htmlFor="apellido" className="form-label">
-          Apellido
-        </label>
+        <label htmlFor="apellido" className="form-label">Apellido</label>
         <input
           type="text"
           id="apellido"
           name="apellido"
-          className={`form-control-registro ${
-            errores.apellido && mostrarErrores ? "is-invalid" : ""
-          }`}
+          className={`form-control-registro ${errores.apellido && mostrarErrores ? "is-invalid" : ""}`}
           value={formulario.apellido}
           onChange={manejarCambio}
           required
         />
-        {errores.apellido && mostrarErrores && (
-          <div className="invalid-feedback">{errores.apellido}</div>
-        )}
+        {errores.apellido && mostrarErrores && <div className="invalid-feedback">{errores.apellido}</div>}
       </div>
 
       <div className="mb-3">
         <label className="form-label">Documento de identidad</label>
         <div className="document-group">
-          <div className="document-type">
-            <select
-              id="tipo-doc"
-              name="tipoDoc"
-              className={`form-select ${
-                errores.tipoDoc && mostrarErrores ? "is-invalid" : ""
-              }`}
-              value={formulario.tipoDoc}
-              onChange={manejarCambio}
-              required
-            >
-              <option value="" disabled>
-                Seleccionar
-              </option>
-              <option value="DNI">D.N.I.</option>
-              <option value="CE">C.E.</option>
-            </select>
-          </div>
-          <div className="document-number">
-            <input
-              type="text"
-              id="documento"
-              name="documento"
-              className={`form-control-registro ${
-                errores.documento && mostrarErrores ? "is-invalid" : ""
-              }`}
-              placeholder="00000000"
-              value={formulario.documento}
-              onChange={manejarCambio}
-              required
-            />
-            {errores.documento && mostrarErrores && (
-              <div className="invalid-feedback">{errores.documento}</div>
-            )}
-          </div>
+          <select
+            name="tipoDocumento"
+            className={`form-select ${errores.tipoDocumento && mostrarErrores ? "is-invalid" : ""}`}
+            value={formulario.tipoDocumento}
+            onChange={manejarCambio}
+            required
+          >
+            <option value="" disabled>Seleccionar</option>
+            <option value="DNI">D.N.I.</option>
+            <option value="CE">C.E.</option>
+          </select>
+          <input
+            type="text"
+            name="numDocumento"
+            className={`form-control-registro ${errores.numDocumento && mostrarErrores ? "is-invalid" : ""}`}
+            placeholder="00000000"
+            value={formulario.numDocumento}
+            onChange={manejarCambio}
+            required
+          />
+          {errores.numDocumento && mostrarErrores && <div className="invalid-feedback">{errores.numDocumento}</div>}
         </div>
       </div>
 
       <div className="mb-3">
-        <label htmlFor="email" className="form-label">
-          Correo electrónico
-        </label>
+        <label htmlFor="correoElectronico" className="form-label">Correo electrónico</label>
         <input
           type="email"
-          id="email"
-          name="email"
-          className={`form-control-registro ${
-            errores.email && mostrarErrores ? "is-invalid" : ""
-          }`}
-          value={formulario.email}
+          id="correoElectronico"
+          name="correoElectronico"
+          className={`form-control-registro ${errores.correoElectronico && mostrarErrores ? "is-invalid" : ""}`}
+          value={formulario.correoElectronico}
           onChange={manejarCambio}
           required
         />
-        {errores.email && mostrarErrores && (
-          <div className="invalid-feedback">{errores.email}</div>
-        )}
+        {errores.correoElectronico && mostrarErrores && <div className="invalid-feedback">{errores.correoElectronico}</div>}
       </div>
 
       <div className="mb-3">
-        <label htmlFor="telefono" className="form-label">
-          Teléfono
-        </label>
+        <label htmlFor="numeroCelular" className="form-label">Teléfono</label>
         <input
           type="tel"
-          id="telefono"
-          name="telefono"
-          className={`form-control-registro ${
-            errores.telefono && mostrarErrores ? "is-invalid" : ""
-          }`}
-          value={formulario.telefono}
+          id="numeroCelular"
+          name="numeroCelular"
+          className={`form-control-registro ${errores.numeroCelular && mostrarErrores ? "is-invalid" : ""}`}
+          value={formulario.numeroCelular}
           onChange={manejarCambio}
           required
         />
-        {errores.telefono && mostrarErrores && (
-          <div className="invalid-feedback">{errores.telefono}</div>
-        )}
+        {errores.numeroCelular && mostrarErrores && <div className="invalid-feedback">{errores.numeroCelular}</div>}
       </div>
 
       <div className="mb-3">
-        <label htmlFor="clave" className="form-label">
-          Contraseña
-        </label>
+        <label htmlFor="contrasena" className="form-label">Contraseña</label>
         <input
           type="password"
-          id="clave"
-          name="clave"
-          className={`form-control-registro ${
-            errores.clave && mostrarErrores ? "is-invalid" : ""
-          }`}
-          value={formulario.clave}
+          id="contrasena"
+          name="contrasena"
+          className={`form-control-registro ${errores.contrasena && mostrarErrores ? "is-invalid" : ""}`}
+          value={formulario.contrasena}
           onChange={manejarCambio}
           required
         />
-        {errores.clave && mostrarErrores && (
-          <div className="invalid-feedback">{errores.clave}</div>
-        )}
+        {errores.contrasena && mostrarErrores && <div className="invalid-feedback">{errores.contrasena}</div>}
       </div>
 
       <div className="form-check mb-4 text-start">
         <input
-          className={`form-check-input ${
-            errores.terminos && mostrarErrores ? "is-invalid" : ""
-          }`}
+          className={`form-check-input ${errores.terminos && mostrarErrores ? "is-invalid" : ""}`}
           type="checkbox"
-          id="terminos"
           name="terminos"
           checked={formulario.terminos}
           onChange={manejarCambio}
           required
         />
         <label className="form-check-label" htmlFor="terminos">
-          Acepto los <a href="#">Términos y Condiciones</a> y{" "}
-          <a href="#">Política de Privacidad</a>
+          Acepto los <a href="#">Términos y Condiciones</a> y <a href="#">Política de Privacidad</a>
         </label>
-        {errores.terminos && mostrarErrores && (
-          <div className="invalid-feedback">{errores.terminos}</div>
-        )}
+        {errores.terminos && mostrarErrores && <div className="invalid-feedback">{errores.terminos}</div>}
       </div>
 
       <button type="submit" className="btn btn-submit">
@@ -259,5 +223,4 @@ const FormularioRegistro = ({ onRegistroExitoso }) => {
   );
 };
 
-// Al final del archivo debe tener:
 export default FormularioRegistro;

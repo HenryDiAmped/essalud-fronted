@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import './SidebarAdmin.css'
 
 export const SidebarAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const navigate = useNavigate();
 
     // Recuperar usuario
     const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-    // Detecta si es móvil al cargar y al cambiar el tamaño de la pantalla
     useEffect(() => {
         const checkIfMobile = () => {
-            setIsMobile(window.innerWidth <= 768); // Ajusta el breakpoint según necesites
+            setIsMobile(window.innerWidth <= 768);
         };
 
-        checkIfMobile(); // Verificar al montar el componente
+        checkIfMobile();
         window.addEventListener("resize", checkIfMobile);
 
         return () => {
@@ -23,13 +23,8 @@ export const SidebarAdmin = () => {
         };
     }, []);
 
-    // En móvil, inicia colapsado
     useEffect(() => {
-        if (isMobile) {
-            setCollapsed(true);
-        } else {
-            setCollapsed(false); // En desktop, inicia expandido (o ajusta según prefieras)
-        }
+        setCollapsed(isMobile);
     }, [isMobile]);
 
     const toggleSidebar = () => {
@@ -37,17 +32,17 @@ export const SidebarAdmin = () => {
     };
 
     const handleLogout = () => {
-        console.log("Sesión cerrada");
+        localStorage.removeItem("usuario");
+        navigate("/ingresar");
     };
 
     return (
         <>
-            <div
-                className={`sidebarAdmin d-flex flex-column ${collapsed ? "collapsed" : ""}`}
-                id="sidebar"
-            >
+            <div className={`sidebarAdmin d-flex flex-column ${collapsed ? "collapsed" : ""}`} id="sidebar">
                 <div className="sidebarAdmin-header">
-                    <span className="sidebarAdmin-text">ADMINISTRADOR: {usuario.nombre} {usuario.apellido}</span>
+                    <span className="sidebarAdmin-text">
+                        ADMINISTRADOR: {usuario.nombre} {usuario.apellido}
+                    </span>
                     <button
                         className="btn btn-outline-light px-2 py-1 rounded-2"
                         style={{ width: "36px", height: "36px" }}
@@ -76,7 +71,7 @@ export const SidebarAdmin = () => {
                         onClick={() => isMobile && setCollapsed(true)}
                     >
                         <i className="bi bi-person-badge-fill me-2"></i>
-                        <span className="sidebarAdmin-text">Medicos</span>
+                        <span className="sidebarAdmin-text">Médicos</span>
                     </NavLink>
                     <NavLink
                         to="/dashboard/moduloEspecialidades"
@@ -106,7 +101,7 @@ export const SidebarAdmin = () => {
                         onClick={() => isMobile && setCollapsed(true)}
                     >
                         <i className="bi bi-calendar-week-fill me-2"></i>
-                        <span className="sidebarAdmin-text">Horarios de Medicos</span>
+                        <span className="sidebarAdmin-text">Horarios Médicos</span>
                     </NavLink>
                     <NavLink
                         to="/dashboard/moduloTurnos"
@@ -116,7 +111,7 @@ export const SidebarAdmin = () => {
                         onClick={() => isMobile && setCollapsed(true)}
                     >
                         <i className="bi bi-clock-fill me-2"></i>
-                        <span className="sidebarAdmin-text">Turnos de atencion</span>
+                        <span className="sidebarAdmin-text">Turnos Atención</span>
                     </NavLink>
                 </nav>
 
@@ -131,7 +126,6 @@ export const SidebarAdmin = () => {
                 </div>
             </div>
 
-            {/* Overlay solo visible en móvil cuando el sidebar está expandido */}
             {!collapsed && isMobile && (
                 <div
                     className="sidebarAdmin-overlay"
