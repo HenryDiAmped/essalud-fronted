@@ -19,6 +19,7 @@ import { DetallarCita } from "./pages/detallarCita/DetallarCita";
 import { ResumenCita } from "./pages/resumenCita/ResumenCita";
 import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
 import { PaginaNoAutorizado } from "./pages/paginaNoAutorizado/PaginaNoAutorizado"
+import DashboardCitas from "./pages/dashboardCitas/DashboardCitas";
 
 function App() {
   return (
@@ -138,6 +139,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
                 <DashboardTurnosAtencion />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloCitas"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardCitas />
               </ProtectedRoute>
             }
           />

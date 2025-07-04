@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import turnoService from '../../services/turnosAtencionCitasService';
 import ModalAgregarTurno from '../../components/modalesTurnoAtencion/ModalAgregarTurno';
 import ModalConfirmacion from '../../components/modalConfirmacion/ModalConfirmacion';
+import { useNavigate } from "react-router-dom";
+
 
 export const DashboardTurnosAtencion = () => {
     const [turnos, setTurnos] = useState([]);
     const [showModalAgregarTurno, setShowModalAgregarTurno] = useState(false);
     const [showModalConfirmacion, setShowModalConfirmacion] = useState(false);
     const [resolverConfirmacion, setResolverConfirmacion] = useState(null);
+
+    const navigate = useNavigate();
+
 
     const listarTurnos = () => {
         turnoService.getAllTurnosAtencionCitas()
@@ -53,7 +58,12 @@ export const DashboardTurnosAtencion = () => {
         <div className="container">
             <br />
             <div className="d-flex justify-content-between align-items-center my-3">
-                <h2 className="text-center m-0">Turnos de Atención</h2>
+                <div>
+                    <button className="btn btn-secondary me-2" onClick={() => navigate("/dashboard/moduloCitas")}>
+                        Ver Citas
+                    </button>
+                </div>
+                <h2 className="text-center m-0 flex-grow-1">Turnos de Atención</h2>
                 <button className="btn btn-primary" onClick={() => setShowModalAgregarTurno(true)}>
                     + Agregar Turno
                 </button>
