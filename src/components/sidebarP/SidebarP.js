@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./SidebarP.css";
 
 export const SidebarP = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate(); // para redirigir
 
   // Recuperar usuario
   const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -13,10 +13,10 @@ export const SidebarP = () => {
   // Detecta si es móvil al cargar y al cambiar el tamaño de la pantalla
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth <= 768); // Ajusta el breakpoint según necesites
+      setIsMobile(window.innerWidth <= 768);
     };
 
-    checkIfMobile(); // Verificar al montar el componente
+    checkIfMobile();
     window.addEventListener("resize", checkIfMobile);
 
     return () => {
@@ -24,12 +24,11 @@ export const SidebarP = () => {
     };
   }, []);
 
-  // En móvil, inicia colapsado
   useEffect(() => {
     if (isMobile) {
       setCollapsed(true);
     } else {
-      setCollapsed(false); // En desktop, inicia expandido (o ajusta según prefieras)
+      setCollapsed(false);
     }
   }, [isMobile]);
 
@@ -38,7 +37,8 @@ export const SidebarP = () => {
   };
 
   const handleLogout = () => {
-    console.log("Sesión cerrada");
+    localStorage.removeItem("usuario");
+    navigate("/ingresar");
   };
 
   return (
@@ -48,7 +48,9 @@ export const SidebarP = () => {
         id="sidebar"
       >
         <div className="sidebar-header">
-          <span className="sidebar-text">PACIENTE: {usuario.nombre} {usuario.apellido}</span>
+          <span className="sidebar-text">
+            PACIENTE: {usuario.nombre} {usuario.apellido}
+          </span>
           <button
             className="btn btn-outline-light px-2 py-1 rounded-2"
             style={{ width: "36px", height: "36px" }}
@@ -92,7 +94,6 @@ export const SidebarP = () => {
         </div>
       </div>
 
-      {/* Overlay solo visible en móvil cuando el sidebar está expandido */}
       {!collapsed && isMobile && (
         <div
           className="sidebar-overlay"
