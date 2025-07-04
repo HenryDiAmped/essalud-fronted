@@ -10,7 +10,7 @@ export const Ingresar = () => {
     <div className="body-style">
       <NavbarE />
       <Cajalogin />
-      <ElementosDecoracion/>
+      <ElementosDecoracion />
     </div>
   );
 };

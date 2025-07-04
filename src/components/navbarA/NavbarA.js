@@ -9,7 +9,7 @@ export const NavbarA = () => {
         <h2 className="m-0">EsSalud</h2>
       </Link>
       <div className="d-flex flex-wrap gap-2 justify-content-center justify-content-sm-end">
-        <Link to="/escogerpa" className="btn btn-outline-light px-3 py-2">
+        <Link to="/ingresar" className="btn btn-outline-light px-3 py-2">
           Ingresa
         </Link>
         <Link to="/registrar" className="btn btn-outline-light px-3 py-2">
