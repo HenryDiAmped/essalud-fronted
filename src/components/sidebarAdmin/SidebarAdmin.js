@@ -6,6 +6,9 @@ export const SidebarAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
+    // Recuperar usuario
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
     // Detecta si es móvil al cargar y al cambiar el tamaño de la pantalla
     useEffect(() => {
         const checkIfMobile = () => {
@@ -44,7 +47,7 @@ export const SidebarAdmin = () => {
                 id="sidebar"
             >
                 <div className="sidebarAdmin-header">
-                    <span className="sidebarAdmin-text">ADMINISTRADOR</span>
+                    <span className="sidebarAdmin-text">ADMINISTRADOR: {usuario.nombre} {usuario.apellido}</span>
                     <button
                         className="btn btn-outline-light px-2 py-1 rounded-2"
                         style={{ width: "36px", height: "36px" }}

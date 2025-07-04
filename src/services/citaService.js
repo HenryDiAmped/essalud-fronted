@@ -12,6 +12,15 @@ class CitaService {
         });
     }
 
+    getCitasPorIDPaciente(idPaciente) {
+        return axios.get(CITA_BASE_REST_API_URL + "/paciente/" + idPaciente, {
+            auth: {
+                username: "admin",
+                password: "admin123"
+            }
+        });
+    }
+
     createCitas(cita) {
         return axios.post(CITA_BASE_REST_API_URL, cita, {
             auth: {
