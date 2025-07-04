@@ -18,30 +18,136 @@ import { DashboardTurnosAtencion } from "./pages/dashboardTurnosAtencion/Dashboa
 import { DetallarCita } from "./pages/detallarCita/DetallarCita";
 import { ResumenCita } from "./pages/resumenCita/ResumenCita";
 import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
+import { PaginaNoAutorizado } from "./pages/paginaNoAutorizado/PaginaNoAutorizado"
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>}>
-          <Route path="/" element={<ProtectedRoute><HomeCitas /></ProtectedRoute>} />
-          <Route path="reservaCitas" element={<ProtectedRoute><HomeCitas /></ProtectedRoute>} />
-          <Route path='reservaCitas/detallaCita/:idSede' element={<ProtectedRoute><DetallarCita /></ProtectedRoute>} />
-          <Route path="reservaCitas/resumen-cita" element={<ProtectedRoute><ResumenCita /></ProtectedRoute>} />
-          <Route path="historialCitas" element={<ProtectedRoute><HomeHistorial /></ProtectedRoute>} />
+
+        {/* RUTAS PACIENTES */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute allowedRoles={["PACIENTE"]}>
+              <Home />
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            index
+            element={
+              <ProtectedRoute allowedRoles={["PACIENTE"]}>
+                <HomeCitas />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="reservaCitas"
+            element={
+              <ProtectedRoute allowedRoles={["PACIENTE"]}>
+                <HomeCitas />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="reservaCitas/detallaCita/:idSede"
+            element={
+              <ProtectedRoute allowedRoles={["PACIENTE"]}>
+                <DetallarCita />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="reservaCitas/resumen-cita"
+            element={
+              <ProtectedRoute allowedRoles={["PACIENTE"]}>
+                <ResumenCita />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="historialCitas"
+            element={
+              <ProtectedRoute allowedRoles={["PACIENTE"]}>
+                <HomeHistorial />
+              </ProtectedRoute>
+            }
+          />
         </Route>
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
-          <Route path="/dashboard" element={<ProtectedRoute><DashboardUsuarios /></ProtectedRoute>} />
-          <Route path="moduloUsuarios" element={<ProtectedRoute><DashboardUsuarios /></ProtectedRoute>} />
-          <Route path="moduloMedicos" element={<ProtectedRoute><DashboardMedicos /></ProtectedRoute>} />
-          <Route path="moduloEspecialidades" element={<ProtectedRoute><DashboardEspecialidades /></ProtectedRoute>} />
-          <Route path="moduloSedes" element={<ProtectedRoute><DashboardSedes /></ProtectedRoute>} />
-          <Route path="moduloJornadas" element={<ProtectedRoute><DashboardJornada /></ProtectedRoute>} />
-          <Route path="moduloTurnos" element={<ProtectedRoute><DashboardTurnosAtencion /></ProtectedRoute>} />
+
+        {/* RUTAS ADMIN */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            index
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardUsuarios />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloUsuarios"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardUsuarios />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloMedicos"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardMedicos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloEspecialidades"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardEspecialidades />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloSedes"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardSedes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloJornadas"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardJornada />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="moduloTurnos"
+            element={
+              <ProtectedRoute allowedRoles={["ADMINISTRADOR"]}>
+                <DashboardTurnosAtencion />
+              </ProtectedRoute>
+            }
+          />
         </Route>
+
+        {/* PÁGINAS PÚBLICAS */}
         <Route path="/autenticacion" element={<Autenticacion />} />
         <Route path="/ingresar" element={<Ingresar />} />
         <Route path="/registrar" element={<Registrar />} />
+        <Route path="/no-autorizado" element={<PaginaNoAutorizado />} />
         <Route path="*" element={<Paginaerror />} />
       </Routes>
     </div>

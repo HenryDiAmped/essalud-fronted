@@ -1,12 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-export const ProtectedRoute = ({ children }) => {
+export const ProtectedRoute = ({ allowedRoles, children }) => {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
 
     if (!usuario) {
-        // Si NO hay usuario en localStorage, redirige al login
-        return <Navigate to="/autenticacion" replace />;
+        return <Navigate to="/ingresar" replace />;
+    }
+
+    if (allowedRoles && !allowedRoles.includes(usuario.tipoUsuario)) {
+        return <Navigate to="/no-autorizado" replace />;
     }
 
     return children;
