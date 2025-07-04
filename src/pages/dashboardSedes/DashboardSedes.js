@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import sedeService from '../../services/sedeService';
+import detalleSedeService from '../../services/detalleSedeService';
 import ModalAgregarSede from '../../components/modalesSede/ModalAgregarSede';
 import ModalEditarSede from '../../components/modalesSede/ModalEditarSede';
 import ModalConfirmacion from '../../components/modalConfirmacion/ModalConfirmacion';
+import ModalEspecialidades from '../../components/modalesSede/ModalEspecialidades'; // el nuevo modal
 
 export const DashboardSedes = () => {
     const [sedes, setSedes] = useState([]);
@@ -13,10 +15,14 @@ export const DashboardSedes = () => {
     const [showModalConfirmacion, setShowModalConfirmacion] = useState(false);
     const [resolverConfirmacion, setResolverConfirmacion] = useState(null);
 
+    const [especialidades, setEspecialidades] = useState([]);
+    const [showModalEspecialidades, setShowModalEspecialidades] = useState(false);
+    const [nombreSedeActual, setNombreSedeActual] = useState('');
+
     const listarSedes = () => {
-        sedeService.getAllSedes().then(response => {
-            setSedes(response.data);
-        }).catch(error => console.log(error));
+        sedeService.getAllSedes()
+            .then(response => setSedes(response.data))
+            .catch(error => console.log(error));
     };
 
     useEffect(() => {
@@ -61,9 +67,23 @@ export const DashboardSedes = () => {
         sedeService.deleteSede(sedeId).then(() => {
             listarSedes();
         }).catch(error => {
-            alert("Otra tabla depende de esta Sede")
+            alert("Otra tabla depende de esta Sede");
             console.log(error);
         });
+    };
+
+    const mostrarEspecialidadesPorSede = (sede) => {
+        detalleSedeService.getAllDetalleSedes()
+            .then(response => {
+                const detallesDeLaSede = response.data.filter(detalle => detalle.sede?.idSedes === sede.idSedes);
+                setEspecialidades(detallesDeLaSede);
+                setNombreSedeActual(sede.nombreSede);
+                setShowModalEspecialidades(true);
+            })
+            .catch(error => {
+                console.log(error);
+                alert("No se pudieron cargar las especialidades.");
+            });
     };
 
     return (
@@ -94,9 +114,21 @@ export const DashboardSedes = () => {
                                 <td>{sede.nombreSede}</td>
                                 <td>
                                     <div className="d-flex flex-column flex-md-row gap-2">
-                                        <button className='btn btn-info btn-sm'>Especialidades Disponibles</button>
-                                        <button className="btn btn-warning btn-sm" onClick={() => handleEditarClick(sede)}>Editar</button>
-                                        <button className="btn btn-danger btn-sm" onClick={() => deleteSede(sede.idSedes)}>Eliminar</button>
+                                        <button className='btn btn-info btn-sm'
+                                            onClick={() => mostrarEspecialidadesPorSede(sede)}
+                                        >
+                                            Especialidades Disponibles
+                                        </button>
+                                        <button className="btn btn-warning btn-sm"
+                                            onClick={() => handleEditarClick(sede)}
+                                        >
+                                            Editar
+                                        </button>
+                                        <button className="btn btn-danger btn-sm"
+                                            onClick={() => deleteSede(sede.idSedes)}
+                                        >
+                                            Eliminar
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -127,6 +159,15 @@ export const DashboardSedes = () => {
                     onCancel={() => manejarConfirmacion(false)}
                 />
             )}
+
+            <ModalEspecialidades
+                show={showModalEspecialidades}
+                onClose={() => setShowModalEspecialidades(false)}
+                especialidades={especialidades}
+                nombreSede={nombreSedeActual}
+            />
         </div>
     );
 };
+
+export default DashboardSedes;
