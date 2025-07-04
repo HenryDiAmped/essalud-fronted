@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UsuarioService from "../../services/usuarioService"; // o tu ruta correcta
+import UsuarioService from "../../services/usuarioService";
 
 const FormularioRegistro = () => {
   const navigate = useNavigate();
-
   const [formulario, setFormulario] = useState({
     nombre: "",
     apellido: "",
@@ -15,24 +14,19 @@ const FormularioRegistro = () => {
     contrasena: "",
     terminos: false,
   });
-
   const [errores, setErrores] = useState({});
   const [mostrarErrores, setMostrarErrores] = useState(false);
 
   const manejarCambio = (e) => {
     const { name, value, type, checked } = e.target;
-    const valorActual = type === "checkbox" ? checked : value;
-
     setFormulario({
       ...formulario,
-      [name]: valorActual,
+      [name]: type === "checkbox" ? checked : value,
     });
-
     if (mostrarErrores) {
-      const error = validarCampo(name, valorActual);
       setErrores({
         ...errores,
-        [name]: error,
+        [name]: validarCampo(name, type === "checkbox" ? checked : value),
       });
     }
   };
@@ -41,25 +35,23 @@ const FormularioRegistro = () => {
     switch (nombre) {
       case "nombre":
       case "apellido":
-        return !valor ? "Este campo es obligatorio" : "";
+        return !valor ? "Obligatorio" : "";
       case "tipoDocumento":
-        return !valor ? "Selecciona un tipo de documento" : "";
+        return !valor ? "Selecciona tipo" : "";
       case "numDocumento":
-        return !/^\d{8,12}$/.test(valor)
-          ? "Documento inválido (8-12 dígitos)"
-          : "";
+        return !/^\d{8,12}$/.test(valor) ? "8-12 dígitos" : "";
       case "correoElectronico":
         return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)
           ? "Correo inválido"
           : "";
       case "numeroCelular":
-        return !/^\d{9}$/.test(valor) ? "Teléfono debe tener 9 dígitos" : "";
+        return !/^\d{9}$/.test(valor) ? "9 dígitos" : "";
       case "contrasena":
         return !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(valor)
-          ? "Mínimo 8 caracteres, 1 mayúscula, 1 minúscula y 1 número"
+          ? "8c, 1M, 1m, 1d"
           : "";
       case "terminos":
-        return !valor ? "Debes aceptar los términos" : "";
+        return !valor ? "Requerido" : "";
       default:
         return "";
     }
@@ -67,156 +59,157 @@ const FormularioRegistro = () => {
 
   const validarFormulario = () => {
     const nuevosErrores = {};
-    Object.keys(formulario).forEach((key) => {
-      nuevosErrores[key] = validarCampo(key, formulario[key]);
-    });
+    Object.keys(formulario).forEach(
+      (k) => (nuevosErrores[k] = validarCampo(k, formulario[k]))
+    );
     setErrores(nuevosErrores);
     setMostrarErrores(true);
-    return !Object.values(nuevosErrores).some((error) => error);
+    return !Object.values(nuevosErrores).some((err) => err);
   };
 
   const manejarEnvio = (e) => {
     e.preventDefault();
     if (validarFormulario()) {
-      const usuarioParaGuardar = {
-        nombre: formulario.nombre,
-        apellido: formulario.apellido,
-        tipoDocumento: formulario.tipoDocumento,
-        numDocumento: formulario.numDocumento,
-        correoElectronico: formulario.correoElectronico,
-        numeroCelular: formulario.numeroCelular,
-        contrasena: formulario.contrasena,
-        tipoUsuario: "PACIENTE"
-      };
-      console.log("Enviando:", usuarioParaGuardar);
-
-      UsuarioService.createUsuarios(usuarioParaGuardar)
+      const usuario = { ...formulario, tipoUsuario: "PACIENTE" };
+      UsuarioService.createUsuarios(usuario)
         .then(() => {
-          alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
+          alert("¡Registro exitoso!");
           navigate("/ingresar");
         })
-        .catch((err) => {
-          console.error("Error al registrar usuario:", err);
-          alert("Ocurrió un error al registrarte. Intenta nuevamente.");
-        });
+        .catch(() => alert("Error al registrarte."));
     }
   };
 
   return (
-    <form onSubmit={manejarEnvio} noValidate>
-      <div className="mb-3">
-        <label htmlFor="nombre" className="form-label">Nombre</label>
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          className={`form-control-registro ${errores.nombre && mostrarErrores ? "is-invalid" : ""}`}
-          value={formulario.nombre}
-          onChange={manejarCambio}
-          required
-        />
-        {errores.nombre && mostrarErrores && <div className="invalid-feedback">{errores.nombre}</div>}
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="apellido" className="form-label">Apellido</label>
-        <input
-          type="text"
-          id="apellido"
-          name="apellido"
-          className={`form-control-registro ${errores.apellido && mostrarErrores ? "is-invalid" : ""}`}
-          value={formulario.apellido}
-          onChange={manejarCambio}
-          required
-        />
-        {errores.apellido && mostrarErrores && <div className="invalid-feedback">{errores.apellido}</div>}
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Documento de identidad</label>
-        <div className="document-group">
-          <select
-            name="tipoDocumento"
-            className={`form-select ${errores.tipoDocumento && mostrarErrores ? "is-invalid" : ""}`}
-            value={formulario.tipoDocumento}
-            onChange={manejarCambio}
-            required
-          >
-            <option value="" disabled>Seleccionar</option>
-            <option value="DNI">D.N.I.</option>
-            <option value="CE">C.E.</option>
-          </select>
+    <form onSubmit={manejarEnvio} noValidate className="small-form">
+      <div className="row g-2 mb-2">
+        <div className="col">
           <input
             type="text"
-            name="numDocumento"
-            className={`form-control-registro ${errores.numDocumento && mostrarErrores ? "is-invalid" : ""}`}
-            placeholder="00000000"
-            value={formulario.numDocumento}
+            name="nombre"
+            placeholder="Nombre"
+            className={`form-control-registro form-control-sm ${errores.nombre && mostrarErrores ? "is-invalid" : ""
+              }`}
+            value={formulario.nombre}
             onChange={manejarCambio}
-            required
           />
-          {errores.numDocumento && mostrarErrores && <div className="invalid-feedback">{errores.numDocumento}</div>}
+          {errores.nombre && mostrarErrores && (
+            <div className="invalid-feedback">{errores.nombre}</div>
+          )}
+        </div>
+        <div className="col">
+          <input
+            type="text"
+            name="apellido"
+            placeholder="Apellido"
+            className={`form-control-registro form-control-sm ${errores.apellido && mostrarErrores ? "is-invalid" : ""
+              }`}
+            value={formulario.apellido}
+            onChange={manejarCambio}
+          />
+          {errores.apellido && mostrarErrores && (
+            <div className="invalid-feedback">{errores.apellido}</div>
+          )}
         </div>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="correoElectronico" className="form-label">Correo electrónico</label>
+      <div className="row g-2 mb-2">
+        <div className="col-4">
+          <select
+            name="tipoDocumento"
+            className={`form-select form-select-sm ${errores.tipoDocumento && mostrarErrores ? "is-invalid" : ""
+              }`}
+            value={formulario.tipoDocumento}
+            onChange={manejarCambio}
+          >
+            <option value="">Tipo</option>
+            <option value="DNI">DNI</option>
+            <option value="CE">CE</option>
+          </select>
+          {errores.tipoDocumento && mostrarErrores && (
+            <div className="invalid-feedback">{errores.tipoDocumento}</div>
+          )}
+        </div>
+        <div className="col">
+          <input
+            type="text"
+            name="numDocumento"
+            placeholder="Nro Documento"
+            className={`form-control-registro form-control-sm ${errores.numDocumento && mostrarErrores ? "is-invalid" : ""
+              }`}
+            value={formulario.numDocumento}
+            onChange={manejarCambio}
+          />
+          {errores.numDocumento && mostrarErrores && (
+            <div className="invalid-feedback">{errores.numDocumento}</div>
+          )}
+        </div>
+      </div>
+
+      <div className="mb-2">
         <input
           type="email"
-          id="correoElectronico"
           name="correoElectronico"
-          className={`form-control-registro ${errores.correoElectronico && mostrarErrores ? "is-invalid" : ""}`}
+          placeholder="Correo electrónico"
+          className={`form-control-registro form-control-sm ${errores.correoElectronico && mostrarErrores ? "is-invalid" : ""
+            }`}
           value={formulario.correoElectronico}
           onChange={manejarCambio}
-          required
         />
-        {errores.correoElectronico && mostrarErrores && <div className="invalid-feedback">{errores.correoElectronico}</div>}
+        {errores.correoElectronico && mostrarErrores && (
+          <div className="invalid-feedback">{errores.correoElectronico}</div>
+        )}
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="numeroCelular" className="form-label">Teléfono</label>
+      <div className="mb-2">
         <input
           type="tel"
-          id="numeroCelular"
           name="numeroCelular"
-          className={`form-control-registro ${errores.numeroCelular && mostrarErrores ? "is-invalid" : ""}`}
+          placeholder="Teléfono"
+          className={`form-control-registro form-control-sm ${errores.numeroCelular && mostrarErrores ? "is-invalid" : ""
+            }`}
           value={formulario.numeroCelular}
           onChange={manejarCambio}
-          required
         />
-        {errores.numeroCelular && mostrarErrores && <div className="invalid-feedback">{errores.numeroCelular}</div>}
+        {errores.numeroCelular && mostrarErrores && (
+          <div className="invalid-feedback">{errores.numeroCelular}</div>
+        )}
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="contrasena" className="form-label">Contraseña</label>
+      <div className="mb-2">
         <input
           type="password"
-          id="contrasena"
           name="contrasena"
-          className={`form-control-registro ${errores.contrasena && mostrarErrores ? "is-invalid" : ""}`}
+          placeholder="Contraseña"
+          className={`form-control-registro form-control-sm ${errores.contrasena && mostrarErrores ? "is-invalid" : ""
+            }`}
           value={formulario.contrasena}
           onChange={manejarCambio}
-          required
         />
-        {errores.contrasena && mostrarErrores && <div className="invalid-feedback">{errores.contrasena}</div>}
+        {errores.contrasena && mostrarErrores && (
+          <div className="invalid-feedback">{errores.contrasena}</div>
+        )}
       </div>
 
-      <div className="form-check mb-4 text-start">
+      <div className="form-check mb-3 text-start">
         <input
           className={`form-check-input ${errores.terminos && mostrarErrores ? "is-invalid" : ""}`}
           type="checkbox"
           name="terminos"
           checked={formulario.terminos}
           onChange={manejarCambio}
-          required
+          id="terminos"
         />
-        <label className="form-check-label" htmlFor="terminos">
+        <label className="form-check-label ms-2" htmlFor="terminos">
           Acepto los <a href="#">Términos y Condiciones</a> y <a href="#">Política de Privacidad</a>
         </label>
-        {errores.terminos && mostrarErrores && <div className="invalid-feedback">{errores.terminos}</div>}
+        {errores.terminos && mostrarErrores && (
+          <div className="invalid-feedback d-block">{errores.terminos}</div>
+        )}
       </div>
 
-      <button type="submit" className="btn btn-submit">
+
+      <button type="submit" className="btn btn-submit btn-sm w-100">
         REGISTRARSE
       </button>
     </form>
