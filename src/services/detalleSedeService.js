@@ -1,51 +1,26 @@
 import axios from "axios";
 
-const DETALLE_SEDE_BASE_REST_API_URL = "http://localhost:8080/api/v1/detalleSedes";
+const DETALLE_SEDE_BASE_REST_API_URL = process.env.REACT_APP_API_URL + "/api/v1/detalleSedes";
 
 class DetalleSedeService {
     getAllDetalleSedes() {
-        return axios.get(DETALLE_SEDE_BASE_REST_API_URL, {
-            auth: {
-                username: "admin",
-                password: "admin123"
-            }
-        });
+        return axios.get(DETALLE_SEDE_BASE_REST_API_URL);
     }
 
     createDetalleSedes(detalleSede) {
-        return axios.post(DETALLE_SEDE_BASE_REST_API_URL, detalleSede, {
-            auth: {
-                username: "admin",
-                password: "admin123"
-            }
-        });
+        return axios.post(DETALLE_SEDE_BASE_REST_API_URL, detalleSede);
     }
 
     getDetalleSedeById(detalleSedeId) {
-        return axios.get(DETALLE_SEDE_BASE_REST_API_URL + '/' + detalleSedeId, {
-            auth: {
-                username: "admin",
-                password: "admin123"
-            }
-        });
+        return axios.get(DETALLE_SEDE_BASE_REST_API_URL + '/' + detalleSedeId);
     }
 
     updateDetalleSede(detalleSedeId, detalleSede) {
-        return axios.put(DETALLE_SEDE_BASE_REST_API_URL + '/' + detalleSedeId, detalleSede, {
-            auth: {
-                username: "admin",
-                password: "admin123"
-            }
-        })
+        return axios.put(DETALLE_SEDE_BASE_REST_API_URL + '/' + detalleSedeId, detalleSede)
     }
 
     deleteDetalleSede(detalleSedeId) {
-        return axios.delete(DETALLE_SEDE_BASE_REST_API_URL + '/' + detalleSedeId, {
-            auth: {
-                username: "admin",
-                password: "admin123"
-            }
-        })
+        return axios.delete(DETALLE_SEDE_BASE_REST_API_URL + '/' + detalleSedeId)
     }
 }
 
