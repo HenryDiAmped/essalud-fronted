@@ -24,4 +24,5 @@ class DetalleSedeService {
     }
 }
 
-export default new DetalleSedeService();
+const detalleSedeService = new DetalleSedeService();
+export default detalleSedeService;

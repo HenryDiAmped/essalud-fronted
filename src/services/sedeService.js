@@ -24,4 +24,5 @@ class SedeService {
     }
 }
 
-export default new SedeService();
+const sedeService = new SedeService();
+export default sedeService;

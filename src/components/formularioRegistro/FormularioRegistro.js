@@ -201,7 +201,7 @@ const FormularioRegistro = () => {
           id="terminos"
         />
         <label className="form-check-label ms-2" htmlFor="terminos">
-          Acepto los <a href="#">Términos y Condiciones</a> y <a href="#">Política de Privacidad</a>
+          Acepto los <a href="/registrar">Términos y Condiciones</a> y <a href="#">Política de Privacidad</a>
         </label>
         {errores.terminos && mostrarErrores && (
           <div className="invalid-feedback d-block">{errores.terminos}</div>

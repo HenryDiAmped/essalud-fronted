@@ -74,7 +74,7 @@ export const Cajalogin = () => {
               </div>
 
               <button type="submit">INGRESAR</button>
-              <a href="#">¿Olvidaste tu contraseña?</a>
+              <a href="/ingresar">¿Olvidaste tu contraseña?</a>
             </form>
           </div>
         </div>

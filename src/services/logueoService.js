@@ -8,4 +8,5 @@ class LogueoService {
     }
 }
 
-export default new LogueoService();
+const logueoService = new LogueoService();
+export default logueoService;

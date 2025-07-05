@@ -24,4 +24,5 @@ class TurnoAtencionCitaService {
     }
 }
 
-export default new TurnoAtencionCitaService();
+const turnoAtencionCitaService = new TurnoAtencionCitaService();
+export default turnoAtencionCitaService;

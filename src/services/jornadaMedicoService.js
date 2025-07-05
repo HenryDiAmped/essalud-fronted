@@ -24,4 +24,5 @@ class JornadaMedicoService {
     }
 }
 
-export default new JornadaMedicoService();
+const jornadaMedicoService = new JornadaMedicoService();
+export default jornadaMedicoService;

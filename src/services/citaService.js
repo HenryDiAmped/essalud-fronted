@@ -28,4 +28,5 @@ class CitaService {
     }
 }
 
-export default new CitaService();
+const citaService = new CitaService();
+export default citaService;
