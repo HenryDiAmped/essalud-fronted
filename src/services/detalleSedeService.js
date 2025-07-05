@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const DETALLE_SEDE_BASE_REST_API_URL = process.env.REACT_APP_API_URL + "/api/v1/detalleSedes";
+const DETALLE_SEDE_BASE_REST_API_URL = "https://api-essalud-baayd3drfvahd9ec.centralus-01.azurewebsites.net/api/v1/detalleSedes";
 
 class DetalleSedeService {
     getAllDetalleSedes() {
