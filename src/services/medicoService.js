@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const MEDICO_BASE_REST_API_URL = "https://api-essalud-baayd3drfvahd9ec.centralus-01.azurewebsites.net/api/v1/medicos";
+const MEDICO_BASE_REST_API_URL = "http://localhost:8080/api/v1/medicos";
 
 class MedicoService {
     getAllMedicos() {

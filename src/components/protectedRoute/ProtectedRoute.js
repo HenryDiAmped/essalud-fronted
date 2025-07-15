@@ -5,7 +5,7 @@ export const ProtectedRoute = ({ allowedRoles, children }) => {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
 
     if (!usuario) {
-        return <Navigate to="/ingresar" replace />;
+        return <Navigate to="/autenticacion" replace />;
     }
 
     if (allowedRoles && !allowedRoles.includes(usuario.tipoUsuario)) {
