@@ -1,3 +1,5 @@
+[Link Funcionamiento](https://www.tiktok.com/@henrydiamped/video/7542268129192316178?is_from_webapp=1&sender_device=pc&web_id=7531481874137794054)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
